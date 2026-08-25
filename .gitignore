@@ -1,0 +1,51 @@
+# =====================================================================
+# .gitignore para PasswordManager (.NET 10 / Visual Studio)
+# Estructura: Carpetas de proyectos directamente en la raíz del repositorio
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# Configuración y Secretos de la API (PasswordManager.API)
+# ---------------------------------------------------------------------
+PasswordManager.API/appsettings.json
+PasswordManager.API/appsettings.*.json
+!PasswordManager.API/appsettings.Development.json
+
+# Secretos de usuario de Visual Studio / .NET y variables de entorno
+secrets.json
+.env
+*.env
+
+# ---------------------------------------------------------------------
+# Salidas de Compilación (Proyectos Web, Librerías y Pruebas)
+# Aplica a:
+#   - PasswordManager.API/
+#   - PasswordManager.Application/
+#   - PasswordManager.Domain/
+#   - PasswordManager.Infrastructure/
+#   - PasswordManager.Tests/
+# ---------------------------------------------------------------------
+**/bin/
+**/obj/
+
+# ---------------------------------------------------------------------
+# Archivos Temporales y Configuración de Visual Studio
+# ---------------------------------------------------------------------
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+# ---------------------------------------------------------------------
+# Resultados de Pruebas y Cobertura (xUnit / Visual Studio Test Runner)
+# ---------------------------------------------------------------------
+TestResults/
+*.coverage
+*.coveragexml
+
+# ---------------------------------------------------------------------
+# Sistema Operativo y Basura Local
+# ---------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
