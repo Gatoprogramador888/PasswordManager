@@ -6,9 +6,8 @@
 # ---------------------------------------------------------------------
 # Configuración y Secretos de la API (PasswordManager.API)
 # ---------------------------------------------------------------------
-PasswordManager.API/appsettings.json
-PasswordManager.API/appsettings.*.json
-!PasswordManager.API/appsettings.Development.json
+PasswordManager.API/appsettings.Development.json
+PasswordManager.API/appsettings.Production.json
 
 # Secretos de usuario de Visual Studio / .NET y variables de entorno
 secrets.json
