@@ -23,6 +23,9 @@ namespace PasswordManager.Application.Auth
                     Audience = [_settings.ClientId]
                 };
 
+                Console.WriteLine($"[DEBUG] ClientId configurado: '{_settings.ClientId}'");
+                Console.WriteLine($"[DEBUG] IdToken recibido (primeros 20 chars): '{idToken?[..20]}'");
+
                 var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, validation);
 
                 return new GoogleUserInfo(payload.Subject, payload.Email);

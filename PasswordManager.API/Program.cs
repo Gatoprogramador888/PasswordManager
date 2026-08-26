@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using PasswordManager.Infrastructure;
+using Scalar.AspNetCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,22 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+            "http://127.0.0.1:5500",
+            "http://localhost:5500",
+            "https://127.0.0.1:5500",
+            "https://localhost:5500"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 
 // JWT Bearer — valida el Access Token en cada request
 builder.Services.AddAuthentication(options =>
@@ -45,12 +62,17 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseMiddleware<PasswordManager.API.Middleware.ExceptionHandlerMiddleware>();
 app.UseMiddleware<PasswordManager.API.Middleware.TarpitMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

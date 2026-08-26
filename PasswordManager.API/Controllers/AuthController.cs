@@ -65,19 +65,19 @@ public sealed class AuthController(
             return Unauthorized(new { code = "INVALID_REFRESH_TOKEN", message = "Refresh token inválido o expirado." });
 
         // 2 — Buscar el usuario
-        var user = await userRepo.GetByIdAsync(userId.Value, ct);
+        var user = await userRepo.GetByIdAsync(userId.Value, CancellationToken.None);
 
         if (user is null)
             return Unauthorized(new { code = "USER_NOT_FOUND", message = "Usuario no encontrado." });
 
         // 3 — Revocar el token usado (rotación de tokens)
-        await tokenStore.RevokeAsync(request.RefreshToken, ct);
+        await tokenStore.RevokeAsync(request.RefreshToken, CancellationToken.None);
 
         // 4 — Emitir nuevos tokens
         var newAccessToken = jwtService.GenerateAccessToken(user.Id, user.Email);
         var newRefreshToken = jwtService.GenerateRefreshToken();
 
-        await tokenStore.SaveAsync(newRefreshToken, user.Id, TimeSpan.FromHours(1), ct);
+        await tokenStore.SaveAsync(newRefreshToken, user.Id, TimeSpan.FromHours(1), CancellationToken.None);
 
         return Ok(new { accessToken = newAccessToken, refreshToken = newRefreshToken });
     }

@@ -24,8 +24,11 @@ namespace PasswordManager.Infrastructure
         {
             // MySQL
             var connString = config.GetConnectionString("MySQL")!;
+            //services.AddDbContext<AppDbContext>(options =>
+            //options.UseMySql(connString, new MariaDbServerVersion(new Version(10, 4, 32))));
             services.AddDbContext<AppDbContext>(options =>
                 options.UseMySql(connString, ServerVersion.AutoDetect(connString)));
+
 
             // Redis
             services.AddSingleton<IConnectionMultiplexer>(
@@ -47,6 +50,9 @@ namespace PasswordManager.Infrastructure
             services.AddScoped<AddEntryCommand>();
             services.AddScoped<UpdateEntryCommand>();
             services.AddScoped<DeleteEntryCommand>();
+
+            // Idempotency store
+            services.AddScoped<IIdempotencyStore, IdempotencyStore>();
 
             // Settings
             services.Configure<GoogleSettings>(config.GetSection("Google"));
