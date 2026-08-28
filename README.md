@@ -409,6 +409,14 @@ Crea `PasswordManager.API/appsettings.Development.json` (no se sube al repo):
 
 ```json
 {
+/*Los dominios o ip que se desea recibir requests*/
+/*En caso de querer aceptar todos usar '*' */
+  "AllowedOrigins": [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "https://127.0.0.1:5500",
+    "https://localhost:5500"
+  ],
   "ConnectionStrings": {
     "MySQL": "Server=localhost;Port=3306;Database=password_manager;Uid=root;Pwd=;SslMode=None;",
     "Redis": "127.0.0.1:6379"

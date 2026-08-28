@@ -14,16 +14,13 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowedHosts", policy =>
     {
-        policy.WithOrigins(
-            "http://127.0.0.1:5500",
-            "http://localhost:5500",
-            "https://127.0.0.1:5500",
-            "https://localhost:5500"
-        )
+        policy.WithOrigins(allowedOrigins)
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
@@ -70,7 +67,7 @@ app.UseMiddleware<PasswordManager.API.Middleware.TarpitMiddleware>();
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowFrontend");
+app.UseCors("AllowedHosts");
 
 app.UseAuthentication();
 
