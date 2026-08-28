@@ -595,3 +595,6 @@ docker-compose up -d --build
 - Sin logging estructurado — pendiente Serilog con sink a archivo
 
 Estos puntos son mejoras conocidas, no descuidos. La prioridad fue construir la base correcta primero.
+
+## Link de la app desplegada
+- https://passwordmanagerapp.site/
