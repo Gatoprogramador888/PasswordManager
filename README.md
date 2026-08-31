@@ -591,7 +591,6 @@ docker-compose up -d --build
 ## Deuda técnica conocida
 
 - Sin tests automatizados — pendiente xUnit + Moq en capa Application
-- Sin paginación en `GET /vault` — escala mal con muchas entradas
 - Sin logging estructurado — pendiente Serilog con sink a archivo
 
 Estos puntos son mejoras conocidas, no descuidos. La prioridad fue construir la base correcta primero.

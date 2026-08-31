@@ -39,5 +39,19 @@ namespace PasswordManager.Infrastructure.Persistence.Repositories
             db.VaultEntries.Remove(entry);
             await db.SaveChangesAsync(ct);
         }
+
+        public async Task<IReadOnlyList<VaultEntry>> GetByUserIdAsync(Guid userId, int min = 0, int max = 10, CancellationToken ct = default)
+        => await db.VaultEntries
+                       .Where(v => v.UserId == userId)
+                       .OrderByDescending(v => v.UpdatedAt)
+                       .Skip(min)
+                       .Take(max - min)
+                       .ToListAsync(ct);
+
+        public async Task<int> GetCountAsync(Guid userId, CancellationToken ct = default)
+        => await db.VaultEntries
+                       .Where(v => v.UserId == userId)
+                       .CountAsync(ct);
+
     }
 }

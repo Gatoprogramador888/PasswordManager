@@ -9,13 +9,15 @@ namespace PasswordManager.Application.Vault
 {
     public sealed class AddEntryCommand(IVaultRepository repo)
     {
-        public async Task<Guid> HandleAsync(Guid userId, AddEntryRequestDto request, CancellationToken ct = default)
+        public async Task<CreateVaultEntryResponse> HandleAsync(Guid userId, AddEntryRequestDto request, CancellationToken ct = default)
         {
             var entry = VaultEntry.Create(userId, request.Name, request.EncryptedBlob, request.Iv);
 
             await repo.AddAsync(entry, ct);
 
-            return entry.Id;
+            int count = await repo.GetCountAsync(userId, ct);
+
+            return new(entry.Id, count);
         }
     }
 }

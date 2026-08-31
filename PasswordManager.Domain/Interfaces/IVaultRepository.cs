@@ -7,7 +7,10 @@ namespace PasswordManager.Domain.Interfaces
 {
     public interface IVaultRepository
     {
+        [System.Obsolete("Se usara ahora con minimos y maximos")]
         Task<IReadOnlyList<VaultEntry>> GetByUserIdAsync(Guid userId, CancellationToken ct = default);
+        Task<IReadOnlyList<VaultEntry>> GetByUserIdAsync(Guid userId, int min = 0, int max = 10, CancellationToken ct = default);
+        Task<int> GetCountAsync(Guid userId, CancellationToken ct = default);
         Task<VaultEntry?> GetByIdAsync(Guid id, Guid userId, CancellationToken ct = default);
         Task AddAsync(VaultEntry entry, CancellationToken ct = default);
         Task UpdateAsync(VaultEntry entry, CancellationToken ct = default);

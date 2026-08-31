@@ -50,6 +50,7 @@ namespace PasswordManager.Infrastructure
             services.AddScoped<AddEntryCommand>();
             services.AddScoped<UpdateEntryCommand>();
             services.AddScoped<DeleteEntryCommand>();
+            services.AddScoped<GetVaultCountQuery>();
 
             // Idempotency store
             services.AddScoped<IIdempotencyStore, IdempotencyStore>();

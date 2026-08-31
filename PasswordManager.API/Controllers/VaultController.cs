@@ -12,12 +12,14 @@ namespace PasswordManager.API.Controllers;
 [Authorize] // todos los endpoints del vault requieren JWT válido
 public sealed class VaultController(
     GetVaultQuery getVaultQuery,
+    GetVaultCountQuery getVaultCountQuery,
     AddEntryCommand addEntryCommand,
     UpdateEntryCommand updateEntryCommand,
     DeleteEntryCommand deleteEntryCommand,
     IIdempotencyStore idempotencyStore) : ControllerBase
 {
     // GET api/vault
+    [System.Obsolete("Ahora se usara un endpoint por paginacion")]
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
@@ -25,6 +27,26 @@ public sealed class VaultController(
         var entries = await getVaultQuery.HandleAsync(userId, CancellationToken.None);
 
         return Ok(entries);
+    }
+
+    // GET api/vault/pagination?min=0&max=10
+    [HttpGet("pagination")]
+    public async Task<IActionResult> RetrieveViaPagination([FromQuery]int min,[FromQuery]int max,
+        CancellationToken ct)
+    {
+        var userId = User.GetUserId();
+        var entries = await getVaultQuery.HandleAsync(userId, min, max, CancellationToken.None);
+
+        return Ok(entries);
+    }
+
+    // GET api/vault/Count
+    [HttpGet("Count")]
+    public async Task<IActionResult> Count(CancellationToken ct)
+    {
+        var userId = User.GetUserId();
+        var count = await getVaultCountQuery.HandleAsync(userId, CancellationToken.None);
+        return Ok(count);
     }
 
     // POST api/vault
@@ -39,12 +61,15 @@ public sealed class VaultController(
         if (idempotencyKey is not null && await idempotencyStore.WasProcessedAsync(idempotencyKey, ct))
             return Ok(new { message = "Ya procesado." });
 
-        var id = await addEntryCommand.HandleAsync(
+        var response = await addEntryCommand.HandleAsync(
             userId,
             new(request.Name, request.EncryptedBlob, request.Iv),
             ct);
 
-        return CreatedAtAction(nameof(GetAll), new { id }, new { id });
+        return CreatedAtAction(
+            nameof(RetrieveViaPagination),
+            new { min = 0, max = 10 },
+            new { id = response.Id, totalCount = response.TotalCount });
     }
 
     // PUT api/vault/{id}
@@ -77,6 +102,6 @@ public sealed class VaultController(
 
         var deleted = await deleteEntryCommand.HandleAsync(id, userId, ct);
 
-        return deleted ? NoContent() : NotFound(new { code = "NOT_FOUND", message = "Entrada no encontrada." });
+        return deleted.IsDeleted ? Ok(new { totalCount = deleted.TotalCount }) : NotFound(new { code = "NOT_FOUND", message = "Entrada no encontrada." });
     }
 }
