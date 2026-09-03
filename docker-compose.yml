@@ -1,34 +1,15 @@
-services:
+version: '3.8'
 
+services:
   api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: passwordmanager-api
     restart: always
-    ports:
-      - "8080:8080"
+    network_mode: "host"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__MySQL=${MYSQL_CONNECTION_STRING}
-      - ConnectionStrings__Redis=redis:6379
-      - Google__ClientId=${GOOGLE_CLIENT_ID}
-      - Jwt__Secret=${JWT_SECRET}
-      - Jwt__Issuer=${JWT_ISSUER}
-      - Jwt__Audience=${JWT_AUDIENCE}
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:7-alpine
-    container_name: passwordmanager-redis
-    restart: always
-    command: redis-server --requirepass ${REDIS_PASSWORD} --bind 0.0.0.0
     volumes:
-      - redis_data:/data
-    ports:
-      - "127.0.0.1:6379:6379"  # solo localhost, nunca expuesto al exterior
-
-volumes:
-  redis_data:
+      - ./appsettings.Production.json:/app/appsettings.Production.json:ro

@@ -154,7 +154,7 @@ Ningún stack trace llega al cliente en producción. El middleware atrapa todas 
 | Auth | Google OAuth 2.0 + JWT propio | Sin almacenar passwords, sin dependencia continua de Google |
 | Deploy | Docker + Nginx | Imagen mínima con multistage build |
 | DNS / DDoS | Cloudflare (capa gratuita) | Protección sin costo en Free Tier |
-| VPS | Oracle Cloud Free Tier | 6GB RAM, ARM, sin costo |
+| VPS | Oracle Cloud Free Tier | 6GB RAM, AMD, sin costo |
 
 ---
 
@@ -450,15 +450,20 @@ API disponible en `https://localhost:7188` — documentación en `/scalar/v1`.
 
 ## Deploy con Docker
 
-```bash
-# Crea el archivo .env en la VPS (nunca en el repo)
-cp .env.example .env
-nano .env  # llena los valores reales
+Para desplegar la aplicación mediante Docker Compose, es necesario contar con un archivo appsettings.Production.json en la raíz del proyecto para montar las configuraciones de producción.
 
-# Levanta API + Redis
-docker-compose up -d --build
-```
+### 1 — Prepara la configuración de producción
 
+Usa el archivo PasswordManager.API/appsettings.json como plantilla / placeholder:  
+\# Crea una copia de appsettings.json para producción en la raíz  
+cp PasswordManager.API/appsettings.json appsettings.Production.json  
+nano appsettings.Production.json \# Rellena con tus credenciales/cadenas de producción
+
+### 2 — Despliega con Docker Compose
+
+Una vez creado el archivo appsettings.Production.json, Docker lo montará directamente dentro del contenedor sin requerir un archivo .env o variables adicionales:  
+\# Levanta la API  
+docker-compose up \-d \--build
 ---
 
 ## Deuda técnica conocida
@@ -577,14 +582,20 @@ API disponible en `https://localhost:7188` — documentación en `/scalar/v1`.
 
 ## Deploy con Docker
 
-```bash
-# Crea el archivo .env en la VPS (nunca en el repo)
-cp .env.example .env
-nano .env  # llena los valores reales
+Para desplegar la aplicación mediante Docker Compose, es necesario contar con un archivo appsettings.Production.json en la raíz del proyecto para montar las configuraciones de producción.
 
-# Levanta API + Redis
-docker-compose up -d --build
-```
+### 1 — Prepara la configuración de producción
+
+Usa el archivo PasswordManager.API/appsettings.json como plantilla / placeholder:  
+\# Crea una copia de appsettings.json para producción en la raíz  
+cp PasswordManager.API/appsettings.json appsettings.Production.json  
+nano appsettings.Production.json \# Rellena con tus credenciales/cadenas de producción
+
+### 2 — Despliega con Docker Compose
+
+Una vez creado el archivo appsettings.Production.json, Docker lo montará directamente dentro del contenedor sin requerir un archivo .env o variables adicionales:  
+\# Levanta la API  
+docker-compose up \-d \--build
 
 ---
 
